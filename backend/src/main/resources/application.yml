@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: change-radar
+  profiles:
+    default: demo
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URL:http://localhost:9200}
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+changeradar:
+  index-name: changes
+  ingest:
+    scheduled: true
+    interval: 60s
+    page-size: 50
+    chunk-size: 100
+  sources:
+    servicenow-url: ${SERVICENOW_URL:http://localhost:${server.port}/mock/servicenow}
+    deploys-url: ${DEPLOYS_URL:http://localhost:${server.port}/mock/deploys}
+    flags-url: ${FLAGS_URL:http://localhost:${server.port}/mock/flags}
+  catalog:
+    services:
+      ads-serving:
+        team: ads
+        depends-on: [ads-bidder, ads-index, experiment-service]
+      ads-bidder:
+        team: ads
+        depends-on: [budget-service]
+      ads-index:
+        team: ads-data
+        depends-on: [es-cluster]
+      budget-service:
+        team: ads-data
+      experiment-service:
+        team: experimentation
+      search-api:
+        team: search
+        depends-on: [search-index, experiment-service]
+      search-index:
+        team: search
+        depends-on: [es-cluster]
+      es-cluster:
+        team: platform
+      checkout:
+        team: commerce
+        depends-on: [payments, inventory]
+      payments:
+        team: commerce-payments
+      inventory:
+        team: commerce

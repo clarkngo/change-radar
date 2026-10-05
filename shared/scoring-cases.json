@@ -1,0 +1,134 @@
+{
+  "_comment": "Shared test vectors for SuspectScorer.java and frontend/src/api/scoring.ts. Both must produce these scores.",
+  "alertService": "a",
+  "alertTime": "2026-01-01T12:00:00Z",
+  "catalog": {
+    "a": {
+      "team": "t1",
+      "dependsOn": [
+        "b"
+      ]
+    },
+    "b": {
+      "team": "t1",
+      "dependsOn": [
+        "c"
+      ]
+    },
+    "c": {
+      "team": "t2",
+      "dependsOn": [
+        "d"
+      ]
+    },
+    "d": {
+      "team": "t2",
+      "dependsOn": []
+    },
+    "x": {
+      "team": "t3",
+      "dependsOn": []
+    }
+  },
+  "cases": [
+    {
+      "name": "same service, at alert time",
+      "change": {
+        "service": "a",
+        "type": "DEPLOY",
+        "risk": "MEDIUM",
+        "minutesBeforeAlert": 0
+      },
+      "expectedScore": 100,
+      "expectedDistance": 0
+    },
+    {
+      "name": "same service, one half-life earlier",
+      "change": {
+        "service": "a",
+        "type": "DEPLOY",
+        "risk": "MEDIUM",
+        "minutesBeforeAlert": 15
+      },
+      "expectedScore": 50,
+      "expectedDistance": 0
+    },
+    {
+      "name": "direct dependency flag flip, high risk",
+      "change": {
+        "service": "b",
+        "type": "FEATURE_FLAG",
+        "risk": "HIGH",
+        "minutesBeforeAlert": 6
+      },
+      "expectedScore": 54,
+      "expectedDistance": 1
+    },
+    {
+      "name": "two hops upstream infra change",
+      "change": {
+        "service": "c",
+        "type": "INFRA",
+        "risk": "HIGH",
+        "minutesBeforeAlert": 12
+      },
+      "expectedScore": 25,
+      "expectedDistance": 2
+    },
+    {
+      "name": "unrelated deploy right before alert",
+      "change": {
+        "service": "x",
+        "type": "DEPLOY",
+        "risk": "LOW",
+        "minutesBeforeAlert": 3
+      },
+      "expectedScore": 7,
+      "expectedDistance": -1
+    },
+    {
+      "name": "unrelated infra change at alert time",
+      "change": {
+        "service": "x",
+        "type": "INFRA",
+        "risk": "MEDIUM",
+        "minutesBeforeAlert": 0
+      },
+      "expectedScore": 27,
+      "expectedDistance": -1
+    },
+    {
+      "name": "started after alert (clock skew)",
+      "change": {
+        "service": "a",
+        "type": "DEPLOY",
+        "risk": "HIGH",
+        "minutesBeforeAlert": -2
+      },
+      "expectedScore": 36,
+      "expectedDistance": 0
+    },
+    {
+      "name": "high risk at alert time is capped at 100",
+      "change": {
+        "service": "a",
+        "type": "DEPLOY",
+        "risk": "HIGH",
+        "minutesBeforeAlert": 0
+      },
+      "expectedScore": 100,
+      "expectedDistance": 0
+    },
+    {
+      "name": "three hops upstream config, low risk",
+      "change": {
+        "service": "d",
+        "type": "CONFIG",
+        "risk": "LOW",
+        "minutesBeforeAlert": 30
+      },
+      "expectedScore": 4,
+      "expectedDistance": 3
+    }
+  ]
+}
