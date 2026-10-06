@@ -24,3 +24,8 @@ export function scoreColor(score: number): string {
   if (score >= 20) return '#ea580c'
   return '#8c8c8c'
 }
+
+/** Solid colors for chart markers, matching the tag colors above. */
+export const TYPE_COLOR_HEX: Record<ChangeType, string> = {
+  DEPLOY: '#1677ff', CONFIG: '#722ed1', FEATURE_FLAG: '#13a8a8', INFRA: '#d48806',
+}
