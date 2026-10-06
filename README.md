@@ -11,8 +11,9 @@ plain-English reason for each.
 
 ![Investigating an ads-serving alert: a feature-flag rollout on a dependency ranks first](docs/investigate.jpg)
 
-> A portfolio project inspired by my work on eBay's advertising platform, where I reduced mean time to identify
-> the root cause of site-impacting changes from ~1 minute to ~10 seconds. All code here is original and all data is synthetic.
+> A portfolio project inspired by my work on eBay's ads monitoring platform, where I brought change data into the
+> team's incident tooling. Linking a revenue drop to a recent change went from hours in some cases to within
+> 10 minutes, and sometimes seconds. All code here is original and all data is synthetic.
 
 ## What it does
 
