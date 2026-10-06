@@ -1,17 +1,22 @@
 import { AlertOutlined, SearchOutlined, ThunderboltOutlined } from '@ant-design/icons'
-import { Alert, Button, Card, Col, DatePicker, Empty, Flex, Form, Row, Select, Space, Tag, Typography, theme } from 'antd'
+import { Alert, Button, Card, Col, DatePicker, Empty, Flex, Form, Grid, Row, Select, Space, Tag, Typography, theme } from 'antd'
 import dayjs, { type Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import { api, type Catalog, type CorrelationResult, type Scenario, type Suspect } from '../api'
 import { ComplianceTags, TypeTag } from '../components'
 import { formatTime, fromNow, scoreColor } from '../format'
+import { navigate } from '../route'
 
 const WINDOWS = [30, 60, 120, 240]
 
-export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
+/** Mounted with a key per URL, so a link like #/investigate?service=x&at=iso runs that investigation directly. */
+export function InvestigateView({ catalog, params }: { catalog: Catalog | undefined; params: URLSearchParams }) {
+  const initialService = params.get('service') ?? undefined
+  const initialAt = params.get('at')
+  const screens = Grid.useBreakpoint()
   const [scenarios, setScenarios] = useState<Scenario[]>([])
-  const [service, setService] = useState<string>()
-  const [alertTime, setAlertTime] = useState<Dayjs>(dayjs())
+  const [service, setService] = useState<string | undefined>(initialService)
+  const [alertTime, setAlertTime] = useState<Dayjs>(initialAt ? dayjs(initialAt) : dayjs())
   const [windowMinutes, setWindowMinutes] = useState(120)
   const [result, setResult] = useState<CorrelationResult>()
   const [loading, setLoading] = useState(false)
@@ -19,6 +24,12 @@ export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
 
   useEffect(() => {
     api.scenarios().then(setScenarios).catch(() => setScenarios([]))
+  }, [])
+
+  useEffect(() => {
+    if (initialService && initialAt) void investigate(initialService, dayjs(initialAt))
+    // Runs once per mount; the parent remounts this view when the URL changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function investigate(svc = service, at = alertTime, win = windowMinutes) {
@@ -35,10 +46,7 @@ export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
   }
 
   function runScenario(s: Scenario) {
-    const at = dayjs(s.alertTime)
-    setService(s.service)
-    setAlertTime(at)
-    void investigate(s.service, at, windowMinutes)
+    navigate('investigate', { service: s.service, at: s.alertTime })
   }
 
   const services = Object.keys(catalog?.services ?? {}).sort()
@@ -70,7 +78,7 @@ export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
       )}
 
       <Card size="small" title="Investigate an alert">
-        <Form layout="inline" onFinish={() => investigate()} style={{ rowGap: 12 }}>
+        <Form layout={screens.md ? 'inline' : 'vertical'} onFinish={() => investigate()} style={{ rowGap: 12 }}>
           <Form.Item label="Alerting service" required>
             <Select
               showSearch
@@ -78,7 +86,7 @@ export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
               value={service}
               onChange={setService}
               options={services.map((s) => ({ value: s, label: s }))}
-              style={{ width: 200 }}
+              style={{ width: screens.md ? 200 : '100%' }}
             />
           </Form.Item>
           <Form.Item label="Alert fired at">
@@ -98,7 +106,7 @@ export function InvestigateView({ catalog }: { catalog: Catalog | undefined }) {
       </Card>
 
       {error && <Alert type="error" title="Correlation failed" description={error} showIcon />}
-      {result && <Results result={result} scenario={scenarios.find((s) => s.service === result.alertService && s.alertTime === result.alertTime)} />}
+      {result && <Results result={result} scenario={scenarios.find((s) => s.service === result.alertService && Date.parse(s.alertTime) === Date.parse(result.alertTime))} />}
     </Space>
   )
 }

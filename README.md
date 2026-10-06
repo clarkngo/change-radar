@@ -9,6 +9,8 @@ plain-English reason for each.
 
 **Live demo:** https://clarkngo.github.io/change-radar/ (static build; see [Demo mode](#demo-mode))
 
+![Core Metrics: search-api p99 latency spikes right after an infrastructure change marker](docs/core-metrics.jpg)
+
 ![Investigating an ads-serving alert: a feature-flag rollout on a dependency ranks first](docs/investigate.jpg)
 
 > A portfolio project inspired by my work on eBay's ads monitoring platform, where I brought change data into the
@@ -19,8 +21,10 @@ plain-English reason for each.
 
 | | |
 |---|---|
+| **Dashboard** | Last-24-hour key metrics vs last week, service health, active incidents and the latest changes. |
+| **Core Metrics** | A metric over time with change markers along the top: hover a marker to see the change, click an alert to investigate it. Compare with last week, filter change types, include upstream dependencies. |
 | **Investigate** | Pick the alerting service and the time the alert fired, and get the top 10 suspect changes scored 0–100 on a timeline, each with the reasons behind its score. |
-| **All changes** | One searchable, filterable table of every change from every source. |
+| **Changes** | One searchable, filterable table of every change from every source, with expandable rows. |
 | **Guidelines** | Per-team share of changes that have a ticket, an owner and a rollback plan, so teams can see their own numbers. |
 | **Grafana webhook** | Point a Grafana alert contact point at `/api/webhooks/grafana`. Every firing alert with a `service` label is matched against recent changes automatically. |
 
@@ -120,6 +124,12 @@ curl localhost:8080/api/ingest/status
 ```
 
 To use real sources, run without the `demo` profile and set `SERVICENOW_URL`, `DEPLOYS_URL` and `FLAGS_URL`.
+
+## Metrics are synthetic
+
+Change Radar has no real metric source, so the Dashboard and Core Metrics pages generate deterministic series
+(daily seasonality plus noise) that dip or spike around the planted incidents
+([`frontend/src/metrics.ts`](frontend/src/metrics.ts)). Changes and alerts on those pages are real data from the index.
 
 ## Demo mode
 
