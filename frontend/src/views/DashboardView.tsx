@@ -6,6 +6,7 @@ import { TypeTag } from '../components'
 import { formatTime, fromNow } from '../format'
 import { METRICS, weekOverWeek, type MetricKey } from '../metrics'
 import { navigate } from '../route'
+import { RegionalImpact } from './RegionalImpact'
 
 const HOUR = 3_600_000
 
@@ -70,6 +71,8 @@ export function DashboardView({ catalog }: { catalog: Catalog | undefined }) {
           )
         })}
       </Row>
+
+      {services.length > 0 && <RegionalImpact services={services} scenarios={scenarios} now={now} />}
 
       <Row gutter={[12, 12]}>
         <Col xs={24} lg={14}>

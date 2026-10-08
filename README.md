@@ -21,8 +21,8 @@ plain-English reason for each.
 
 | | |
 |---|---|
-| **Dashboard** | Last-24-hour key metrics vs last week, service health, active incidents and the latest changes. |
-| **Core Metrics** | A metric over time with change markers along the top: hover a marker to see the change, click an alert to investigate it. Compare with last week, filter change types, include upstream dependencies. |
+| **Dashboard** | Last-24-hour key metrics vs last week, a world map of which regions moved (revenue, clicks, errors, latency) around an incident, service health, active incidents and the latest changes. |
+| **Core Metrics** | A metric over time with change markers along the top: hover a marker to see the change, click an alert to investigate it. Compare with last week, filter by region and change type, include upstream dependencies. |
 | **Investigate** | Pick the alerting service and the time the alert fired, and get the top 10 suspect changes scored 0–100 on a timeline, each with the reasons behind its score. |
 | **Changes** | One searchable, filterable table of every change from every source, with expandable rows. |
 | **Guidelines** | Per-team share of changes that have a ticket, an owner and a rollback plan, so teams can see their own numbers. |

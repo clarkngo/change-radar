@@ -4,7 +4,7 @@ import { api, type Catalog, type ChangeEvent, type ChangeType, type Scenario } f
 import { MetricChart, type Series } from '../charts/MetricChart'
 import { dependencyDistance } from '../api/scoring'
 import { TYPE_COLOR_HEX, TYPE_LABEL } from '../format'
-import { METRICS, series as buildSeries, type MetricKey } from '../metrics'
+import { METRICS, REGIONS, REGION_BY_ID, series as buildSeries, type MetricKey } from '../metrics'
 import { navigate } from '../route'
 
 const RANGES = { '1h': 1, '3h': 3, '12h': 12, '24h': 24, '3d': 72, '7d': 168 } as const
@@ -27,6 +27,7 @@ export function MetricsView({ catalog, params }: { catalog: Catalog | undefined;
   const { token } = theme.useToken()
   const [service, setService] = useState(params.get('service') ?? 'ads-serving')
   const [metric, setMetric] = useState<MetricKey>((params.get('metric') as MetricKey) ?? 'revenue')
+  const [region, setRegion] = useState(params.get('region') ?? 'all')
   const [range, setRange] = useState<RangeKey>((params.get('range') as RangeKey) ?? '3h')
   const [compare, setCompare] = useState(true)
   const [showChanges, setShowChanges] = useState(true)
@@ -60,11 +61,13 @@ export function MetricsView({ catalog, params }: { catalog: Catalog | undefined;
   }, [scope, changeTypes, from, to])
 
   const def = METRICS[metric]
+  const regionId = REGION_BY_ID.has(region) ? region : undefined
+  const regionLabel = regionId ? REGION_BY_ID.get(regionId)!.label : 'All regions'
   const chartSeries: Series[] = [
-    { name: `${service} · ${def.label}`, color: token.colorPrimary, points: buildSeries(service, metric, from, to, scenarios) },
+    { name: `${service} · ${def.label}`, color: token.colorPrimary, points: buildSeries(service, metric, from, to, scenarios, 0, regionId) },
     ...(compare ? [{
       name: '7 days ago', color: token.colorTextTertiary, dashed: true,
-      points: buildSeries(service, metric, from, to, scenarios, WEEK),
+      points: buildSeries(service, metric, from, to, scenarios, WEEK, regionId),
     }] : []),
   ]
   const alerts = showAlerts
@@ -83,8 +86,12 @@ export function MetricsView({ catalog, params }: { catalog: Catalog | undefined;
             options={Object.values(METRICS).map((m) => ({ value: m.key, label: `${m.label} (${m.unit})` }))} />
         </Row_>
         <Row_ label="Filters">
-          <Select showSearch value={service} onChange={setService} style={{ width: 220 }}
-            options={services.map((s) => ({ value: s, label: s }))} />
+          <Space wrap>
+            <Select showSearch value={service} onChange={setService} style={{ width: 220 }}
+              options={services.map((s) => ({ value: s, label: s }))} />
+            <Select value={region} onChange={setRegion} style={{ width: 240 }}
+              options={[{ value: 'all', label: 'All regions' }, ...REGIONS.map((r) => ({ value: r.id, label: r.label }))]} />
+          </Space>
         </Row_>
         <Row_ label="Tools">
           <Space wrap size="large">
@@ -104,7 +111,7 @@ export function MetricsView({ catalog, params }: { catalog: Catalog | undefined;
       </Card>
 
       <Card size="small"
-        title={`${def.label} · ${service}`}
+        title={`${def.label} · ${service} · ${regionLabel}`}
         extra={showChanges && (
           <Space size={10} wrap>
             {(Object.keys(TYPE_LABEL) as ChangeType[]).map((t) => (

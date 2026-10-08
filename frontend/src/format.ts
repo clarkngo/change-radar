@@ -17,6 +17,7 @@ export const MISSING_LABEL: Record<string, string> = {
 }
 
 export const fromNow = (iso: string) => dayjs(iso).fromNow()
+export const formatChange = (change: number) => `${change >= 0 ? '+' : '−'}${Math.abs(change * 100).toFixed(1)}%`
 export const formatTime = (iso: string) => dayjs(iso).format('MMM D, HH:mm')
 
 export function scoreColor(score: number): string {
