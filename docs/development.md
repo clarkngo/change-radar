@@ -50,6 +50,9 @@ No backend or Elasticsearch needed: it reads `public/demo/snapshot.json`.
 
 ### Ports
 
+The frontend's Docker image is built from the repository root (`docker-compose.yml` sets the context), because the
+Documentation page bundles `docs/`. Its ignore file is `frontend/Dockerfile.dockerignore`.
+
 | Port | What |
 |---|---|
 | 9200 | Elasticsearch |

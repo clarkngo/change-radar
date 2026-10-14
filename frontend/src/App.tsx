@@ -1,9 +1,9 @@
 import {
-  AimOutlined, ClockCircleOutlined, DashboardOutlined, GithubOutlined, HistoryOutlined, LineChartOutlined,
+  AimOutlined, BookOutlined, ClockCircleOutlined, QuestionCircleOutlined, DashboardOutlined, GithubOutlined, HistoryOutlined, LineChartOutlined,
   SafetyCertificateOutlined,
 } from '@ant-design/icons'
-import { App as AntApp, ConfigProvider, Grid, Layout, Menu, Space, Tag, Tooltip, Typography, theme } from 'antd'
-import { useEffect, useState, type ReactNode } from 'react'
+import { App as AntApp, ConfigProvider, Grid, Layout, Menu, Space, Spin, Tag, Tooltip, Typography, theme } from 'antd'
+import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react'
 import { api, type Catalog } from './api'
 import { navigate, useRoute, type Page } from './route'
 import { ChangesView } from './views/ChangesView'
@@ -12,14 +12,18 @@ import { DashboardView } from './views/DashboardView'
 import { InvestigateView } from './views/InvestigateView'
 import { MetricsView } from './views/MetricsView'
 
+const DocsView = lazy(() => import('./views/DocsView'))
+
 const PRIMARY = '#3a6ff7'
 
-const NAV: { page: Page; label: string; icon: ReactNode; subtitle: string }[] = [
-  { page: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, subtitle: 'Service health, key metrics, recent changes and active incidents' },
-  { page: 'metrics', label: 'Core Metrics', icon: <LineChartOutlined />, subtitle: 'Metrics over time with change markers and alerts' },
-  { page: 'changes', label: 'Changes', icon: <HistoryOutlined />, subtitle: 'Every change from every source, in one place' },
-  { page: 'investigate', label: 'Investigate', icon: <AimOutlined />, subtitle: 'Rank the changes most likely behind an alert' },
-  { page: 'guidelines', label: 'Change Guidelines', icon: <SafetyCertificateOutlined />, subtitle: 'How well each team documents its changes' },
+/** `help` is the section of the user guide that explains the page. */
+const NAV: { page: Page; label: string; icon: ReactNode; subtitle: string; help?: string }[] = [
+  { page: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined />, subtitle: 'Service health, key metrics, recent changes and active incidents', help: 'dashboard' },
+  { page: 'metrics', label: 'Core Metrics', icon: <LineChartOutlined />, subtitle: 'Metrics over time with change markers and alerts', help: 'core-metrics' },
+  { page: 'changes', label: 'Changes', icon: <HistoryOutlined />, subtitle: 'Every change from every source, in one place', help: 'changes' },
+  { page: 'investigate', label: 'Investigate', icon: <AimOutlined />, subtitle: 'Rank the changes most likely behind an alert', help: 'investigate' },
+  { page: 'guidelines', label: 'Change Guidelines', icon: <SafetyCertificateOutlined />, subtitle: 'How well each team documents its changes', help: 'change-guidelines' },
+  { page: 'docs', label: 'Documentation', icon: <BookOutlined />, subtitle: 'How Change Radar works, from concepts to code' },
 ]
 
 function usePrefersDark() {
@@ -69,6 +73,11 @@ function Shell({ catalog }: { catalog: Catalog | undefined }) {
       case 'changes': return <ChangesView key={route.params.toString()} catalog={catalog} params={route.params} />
       case 'investigate': return <InvestigateView key={route.params.toString()} catalog={catalog} params={route.params} />
       case 'guidelines': return <ComplianceView />
+      case 'docs': return (
+        <Suspense fallback={<Spin style={{ display: 'block', margin: '48px auto' }} />}>
+          <DocsView params={route.params} />
+        </Suspense>
+      )
     }
   })()
 
@@ -108,6 +117,12 @@ function Shell({ catalog }: { catalog: Catalog | undefined }) {
             <div style={{ marginBottom: 12 }}>
               <Typography.Title level={4} style={{ margin: 0 }}>{current.label}</Typography.Title>
               <Typography.Text type="secondary" style={{ fontSize: 13 }}>{current.subtitle}</Typography.Text>
+              {current.help && (
+                <Typography.Link style={{ fontSize: 13, marginLeft: 10 }}
+                  onClick={() => navigate('docs', { doc: 'user-guide', section: current.help })}>
+                  <QuestionCircleOutlined /> How this page works
+                </Typography.Link>
+              )}
             </div>
             {view}
           </div>
