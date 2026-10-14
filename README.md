@@ -19,6 +19,21 @@ plain-English reason for each.
 > team's incident tooling. Linking a revenue drop to a recent change went from hours in some cases to within
 > 10 minutes, and sometimes seconds. All code here is original and all data is synthetic.
 
+## Documentation
+
+Full documentation lives in [`docs/`](docs/README.md):
+
+- [Overview and concepts](docs/overview.md): the problem, the approach, and a glossary of every term
+- [Using the app](docs/user-guide.md): Dashboard, Core Metrics, Changes, Investigate and Change Guidelines, control by control
+- [Architecture](docs/architecture.md): components, backend packages, frontend structure, data model and index
+- [Process flows](docs/process-flows.md): ingestion, correlation, the Grafana webhook, an on-call investigation, the static demo, CI/CD
+- [Suspect scoring](docs/scoring.md): the algorithm, with worked examples
+- [Change sources and normalization](docs/data-sources.md): raw formats, field mapping, change guidelines, adding a source
+- [API reference](docs/api.md): every endpoint, with parameters and example responses
+- [Demo data and synthetic metrics](docs/demo-data.md): planted incidents, background changes, the metric and region model
+- [Tech stack](docs/tech-stack.md): every framework and library, with versions
+- [Development and operations](docs/development.md): running, configuration, tests, CI/CD, troubleshooting
+
 ## What it does
 
 | | |
