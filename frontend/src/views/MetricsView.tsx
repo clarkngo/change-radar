@@ -46,7 +46,7 @@ export function MetricsView({ catalog, params }: { catalog: Catalog | undefined;
     api.scenarios().then(setScenarios).catch(() => setScenarios([]))
   }, [])
 
-  const services = Object.keys(catalog?.services ?? {}).sort()
+  const services = useMemo(() => Object.keys(catalog?.services ?? {}).sort(), [catalog])
   const scope = useMemo(() => {
     if (!catalog || !withDeps) return [service]
     return services.filter((s) => dependencyDistance(catalog, service, s) >= 0)

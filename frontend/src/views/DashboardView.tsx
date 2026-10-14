@@ -45,7 +45,7 @@ export function DashboardView({ catalog }: { catalog: Catalog | undefined }) {
     return { ...k, value, change: wow.change }
   }), [now, scenarios])
 
-  const services = Object.keys(catalog?.services ?? {}).sort()
+  const services = useMemo(() => Object.keys(catalog?.services ?? {}).sort(), [catalog])
   const incidents = scenarios
     .filter((s) => now - Date.parse(s.alertTime) < 24 * HOUR)
     .sort((a, b) => Date.parse(b.alertTime) - Date.parse(a.alertTime))
