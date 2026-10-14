@@ -44,6 +44,10 @@ Versions are the ones the project currently resolves to (from `pom.xml`, `packag
 | d3-geo | 3.1.1 | The Natural Earth map projection and SVG path generation for the world map. |
 | topojson-client | 3.1.0 | Converts the TopoJSON world atlas into GeoJSON country shapes. |
 | world-atlas | 2.0.2 | Country outlines from Natural Earth at 1:110m, keyed by ISO 3166-1 numeric codes. |
+| react-markdown | 10.1.0 | Renders the docs on the in-app Documentation page. |
+| remark-gfm | 4.0.1 | GitHub-flavored markdown (tables, strikethrough, autolinks) for the docs. |
+| rehype-slug | 6.0.0 | GitHub-style heading anchors, so `#section` links work the same in the app and on GitHub. |
+| Mermaid | 11.17.2 | Draws the docs' diagrams in the app, in the current theme. Loaded on first use. |
 | Custom SVG charts | | The metric chart and the investigation timeline are hand-written SVG, so change markers, alerts and tooltips can behave exactly as needed. |
 
 ### Frontend tooling
@@ -66,4 +70,4 @@ Versions are the ones the project currently resolves to (from `pom.xml`, `packag
 | GitHub Actions | `ci.yml` runs backend and frontend tests and the frontend build on every pull request and push to main. `static.yml` builds and deploys the static demo. |
 | GitHub Pages | Hosts the static demo at https://clarkngo.github.io/change-radar/. |
 | Grafana (optional) | Sends alerts to the webhook endpoint. Not included in the repo. |
-| Mermaid | Diagrams in these docs, rendered by GitHub. |
+| Mermaid | Diagrams in these docs, rendered by GitHub and by the app's Documentation page. |

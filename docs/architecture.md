@@ -150,7 +150,8 @@ SVG charts.
 | `metrics.ts` | The synthetic metric generator: metric definitions, regions, the incident model, series and week-over-week helpers. See [Demo data](demo-data.md#synthetic-metrics). |
 | `charts/MetricChart.tsx` | The time-series chart with change markers, alerts, a crosshair tooltip and a change tooltip. Plain SVG, resized with a `ResizeObserver`. |
 | `charts/RegionMap.tsx` | The world choropleth. Country shapes from `world-atlas` (Natural Earth, 1:110m), projected with `d3-geo`'s Natural Earth projection; countries are grouped into regions. |
-| `views/*View.tsx` | One component per page: `DashboardView`, `MetricsView`, `ChangesView`, `InvestigateView`, `ComplianceView`. `RegionalImpact.tsx` is the Dashboard's map card. |
+| `views/*View.tsx` | One component per page: `DashboardView`, `MetricsView`, `ChangesView`, `InvestigateView`, `ComplianceView`, `DocsView`. `RegionalImpact.tsx` is the Dashboard's map card. |
+| `views/DocsView.tsx` | The Documentation page. Bundles `docs/*.md` and its images at build time (`import.meta.glob`), renders them with `react-markdown`, and draws Mermaid diagrams. Links to other docs become in-app routes; links to other repository files go to GitHub. Lazy-loaded, so the markdown, the renderer and Mermaid only download when the page is opened. |
 | `components.tsx`, `format.ts` | Shared tags (change type, guideline status), labels, colors and date formatting (Day.js). |
 
 There's no global state library: each page fetches what it needs through `api`, and the catalog is passed down from

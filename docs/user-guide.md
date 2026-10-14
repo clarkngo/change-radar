@@ -1,6 +1,6 @@
 # Using the app
 
-The UI has five pages, listed in the left sidebar. The sidebar collapses to icons on screens narrower than 1200 px.
+The UI has six pages, listed in the left sidebar. The sidebar collapses to icons on screens narrower than 1200 px.
 The header shows your browser's time zone (every time in the app is shown in it) and a tag for the data mode:
 **Live API** when talking to the backend, or **Static demo** on GitHub Pages, where everything runs in the browser.
 Light and dark themes follow your operating system setting.
@@ -15,6 +15,7 @@ pasted into an incident channel:
 | Changes | `#/changes` | `q` (search text), `service` |
 | Investigate | `#/investigate` | `service`, `at` (ISO-8601 alert time). With both set, the investigation runs immediately. |
 | Change Guidelines | `#/guidelines` | none |
+| Documentation | `#/docs` | `doc` (a page, such as `scoring`), `section` (a heading anchor, such as `the-formula`) |
 
 Example: `#/investigate?service=checkout&at=2026-10-05T02:25:00Z` opens Investigate and ranks the suspects for a
 checkout alert at that time.
@@ -182,3 +183,12 @@ How well each team documents its changes. Every site-impacting change should hav
   below), compliant / total, the most often missing items with counts, and the team's services.
 
 Teams see their own numbers, which is what tends to change habits.
+
+## Documentation
+
+These docs, inside the app. Pick a page from the list on the left (a dropdown on narrow screens). Links between
+pages stay in the app, diagrams are drawn in the current light or dark theme, and links to source files open the
+file on GitHub.
+
+Every other page has a **How this page works** link next to its subtitle that opens the matching section of this
+guide.

@@ -6,6 +6,8 @@ export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   plugins: [react()],
   server: {
+    // The Documentation page imports ../docs/*.md from the repository root.
+    fs: { allow: ['..'] },
     proxy: {
       '/api': `http://localhost:${process.env.BACKEND_PORT ?? 8080}`,
     },

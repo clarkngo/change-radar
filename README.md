@@ -21,7 +21,7 @@ plain-English reason for each.
 
 ## Documentation
 
-Full documentation lives in [`docs/`](docs/README.md):
+Full documentation lives in [`docs/`](docs/README.md), and the same pages are in the app under **Documentation**:
 
 - [Overview and concepts](docs/overview.md): the problem, the approach, and a glossary of every term
 - [Using the app](docs/user-guide.md): Dashboard, Core Metrics, Changes, Investigate and Change Guidelines, control by control
@@ -43,6 +43,7 @@ Full documentation lives in [`docs/`](docs/README.md):
 | **Investigate** | Pick the alerting service and the time the alert fired, and get the top 10 suspect changes scored 0–100 on a timeline, each with the reasons behind its score. |
 | **Changes** | One searchable, filterable table of every change from every source, with expandable rows. |
 | **Guidelines** | Per-team share of changes that have a ticket, an owner and a rollback plan, so teams can see their own numbers. |
+| **Documentation** | These docs inside the app, with diagrams, and a "How this page works" link on every page. |
 | **Grafana webhook** | Point a Grafana alert contact point at `/api/webhooks/grafana`. Every firing alert with a `service` label is matched against recent changes automatically. |
 
 ## Architecture
@@ -197,5 +198,6 @@ cd frontend && npm test
 ```
 backend/    Spring Boot 4: ingest/ (Batch + source adapters), correlate/, compliance/, web/, demo/
 frontend/   React 19 + Vite + Ant Design 6: api/ (live + demo clients, scorer), views/
+docs/       Documentation, rendered on GitHub and on the app's Documentation page
 shared/     Scoring test vectors used by both the backend and the frontend
 ```
