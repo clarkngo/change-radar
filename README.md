@@ -9,6 +9,8 @@ plain-English reason for each.
 
 **Live demo:** https://clarkngo.github.io/change-radar/ (static build; see [Demo mode](#demo-mode))
 
+![Regional impact: during an ads-serving incident, revenue drops about 45% in Greater China and Australia & New Zealand while other regions hold steady](docs/regional-impact.jpg)
+
 ![Core Metrics: search-api p99 latency spikes right after an infrastructure change marker](docs/core-metrics.jpg)
 
 ![Investigating an ads-serving alert: a feature-flag rollout on a dependency ranks first](docs/investigate.jpg)
